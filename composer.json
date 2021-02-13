@@ -1,0 +1,20 @@
+{
+    "name": "carloswph/wp-endpoint-gen",
+    "description": "Wordpress custom endpoints helper and class generator.",
+    "type": "library",
+    "require": {
+        "nette/php-generator": "^3.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "WPH\\Endpoints\\": "src/"
+        }
+    },
+    "license": "GPL",
+    "authors": [
+        {
+            "name": "carlos",
+            "email": "geral@meuppt.pt"
+        }
+    ]
+}
