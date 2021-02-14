@@ -4,21 +4,41 @@ namespace WPH\Endpoints;
 
 class Config {
 
-	public $path;
+	public $path = WP_CONTENT_DIR;
 
 	public $semVer = 'v1';
 
-	public $namespace;
+	public $psr = 'EndpointGroup';
 
-	public function getPath() {}
+	public function getPath() {
+		return $this->path;
+	}
 
-	public function setPath($path) {}
+	public function setPath($path) {
+		$this->path = $path;
+	}
 
-	public function getVersion() {}
+	public function getVersion() {
+		return $this->semVer;
+	}
 
-	public function setVersion($semVer) {}
+	public function setVersion($semVer) {
+		$this->semVer = $semVer;
+	}
 
-	public function getPsr() {}
+	public function getPsr() {
+		return $this->psr;
+	}
 
-	public function setPsr($namespace) {}
+	public function setPsr($psr) {
+		$this->psr = $psr;
+	}
+
+	public function getNamespace() {
+		return $this->namespace;
+	}
+
+	public function setNamespace($namespace) {
+		$this->namespace = $namespace;
+	}
 }

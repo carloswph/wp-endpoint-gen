@@ -9,20 +9,47 @@ class Generator {
 	protected $method;
 	protected $namespace;
 	protected $config;
+	protected $path;
+	protected $version;
 	protected $args = '';
 
-	public function __construct(string $namespace, string $endpoint, array $method, Config $config, $args = null) {
+	public function __construct(string $endpoint, array $method, Config $config, $args = null) {
 
-		$this->namespace = $namespace;
 		$this->endpoint = $endpoint;
 		$this->method = $method;
 		$this->config = $config;
+		$this->namespace = $this->config->getPsr();
+		$this->path = $this->config->getPath();
+		$this->version = $this->config->getVersion();
 
 		if(!is_null($args)) {
 			$this->args = $this->array_adjust($method, $args);
 		}
 
-		if(!is_file(SHIPSMART_ROUTES . ucfirst($endpoint) . '.php')) {
+		add_action('rest_api_init', array($this, 'route'));
+	}
+
+	public function route() {
+
+		//$other = new Shipsmart\Routes\Boxes();
+
+		foreach ($this->method as $httpMethod) {
+			register_rest_route(
+				$this->namespace . $this->version,
+				$this->endpoint,
+				array(
+					'methods' => $httpMethod,
+					'callback' => $this->getCallbackClass($this->endpoint, $httpMethod),
+					'permission_callback' => $this->getPermissionsClass($this->endpoint),
+					'args' => $this->getArgs($httpMethod)
+				)
+			);
+		}
+	}
+
+	public function generate() {
+
+		if(!is_file($this->path . ucfirst($endpoint) . '.php')) {
 			$class = new \Nette\PhpGenerator\ClassType(ucfirst($endpoint));
 
 			$class
@@ -53,26 +80,6 @@ class Generator {
 			fwrite($controller, $class);
 			fclose($controller);
 
-		}
-
-		add_action('rest_api_init', array($this, 'route'));
-	}
-
-	public function route() {
-
-		//$other = new Shipsmart\Routes\Boxes();
-
-		foreach ($this->method as $httpMethod) {
-			register_rest_route(
-				$this->namespace . $this::SHIPSMART_API_VERSION,
-				$this->endpoint,
-				array(
-					'methods' => $httpMethod,
-					'callback' => $this->getCallbackClass($this->endpoint, $httpMethod),
-					'permission_callback' => $this->getPermissionsClass($this->endpoint),
-					'args' => $this->getArgs($httpMethod)
-				)
-			);
 		}
 	}
 
