@@ -10,7 +10,7 @@
             "WPH\\Endpoints\\": "src/"
         }
     },
-    "license": "GPL",
+    "license": "GPL-3.0-or-later",
     "authors": [
         {
             "name": "Carlos Matos | WP Helpers",
