@@ -1,18 +1,55 @@
 <?php
 
 namespace WPH\Endpoints;
-use WPH\Endpoints\Config;
+use Nette\PhpGenerator\ClassType as CT;
 
 class Generator {
 
+	/**
+	 * Endpoint name.
+	 * 
+	 * @var  string
+	 */
 	protected $endpoint;
+	/**
+	 * Methods allowed in this endpoint
+	 * 
+	 * @var  array
+	 * @example array('POST', 'PUT', 'HEAD')
+	 */
 	protected $method;
+	/**
+	 * Namespace for the current endpoint group. Passed through the Config class instance.
+	 *
+	 * @var  string
+	 */
 	protected $namespace;
+	/**
+	 * Instance of the Config class.
+	 *
+	 * @var  object
+	 */
 	protected $config;
+
 	protected $path;
 	protected $version;
+	/**
+	 * Arguments to be implemented (optional). Use to apply all arguments to all methods - if looking for arguments applied individually to each method, use the function addArgs()
+	 *
+	 * @var array
+	 */
 	protected $args = '';
 
+	/**
+	 * Constructor.
+	 *
+	 * @since  1.0.0
+	 * 
+	 * @param  string  $endpoint  Name of the endpoint.
+	 * @param  array  $method  Method or methods allowed for the current endpoint. Always submit as an array.
+	 * @param  object  $config  Instance of the Config class.
+	 * @param  array  $args  Array of arguments to be applied to all methods in the current endpoint.
+	 */
 	public function __construct(string $endpoint, array $method, Config $config, $args = null) {
 
 		$this->endpoint = $endpoint;
@@ -29,13 +66,18 @@ class Generator {
 		add_action('rest_api_init', array($this, 'route'));
 	}
 
+	/**
+	 * Route generator.
+	 *
+	 * @since  1.0.0
+	 * @return  void
+	 * 
+	 */
 	public function route() {
-
-		//$other = new Shipsmart\Routes\Boxes();
 
 		foreach ($this->method as $httpMethod) {
 			register_rest_route(
-				$this->namespace . $this->version,
+				$this->namespace . '/' . $this->version,
 				$this->endpoint,
 				array(
 					'methods' => $httpMethod,
@@ -47,17 +89,27 @@ class Generator {
 		}
 	}
 
+	/**
+	 * Class generator for the endpoint callbacks and permission callbacks.
+	 *
+	 * @since  1.0.0
+	 * @return  void
+	 */
 	public function generate() {
 
-		if(!is_file($this->path . ucfirst($endpoint) . '.php')) {
-			$class = new \Nette\PhpGenerator\ClassType(ucfirst($endpoint));
+		if (!is_dir($this->path)) {
+			mkdir($this->path, 0755, true);
+		}
+
+		if(!is_file($this->path . '/' . ucfirst($this->endpoint) . '.php')) {
+			$class = new CT(ucfirst($this->endpoint));
 
 			$class
-				->addComment("Controller class for callbacks and permissions.\nRoute --> " . sprintf($this->config->getPsr() . '\%s', ucfirst($endpoint)))
+				->addComment("Controller class for callbacks and permissions.\nRoute --> " . sprintf($this->config->getPsr() . '\%s', ucfirst($this->endpoint)))
 				->addComment('@since ' . $this->config->getVersion());
 
 			foreach ($method as $function) {
-				$function = $class->addMethod(strtolower($function) . ucfirst($endpoint))
+				$function = $class->addMethod(strtolower($function) . ucfirst($this->endpoint))
 					->addComment('Handles ' . $function . ' requests to the endpoint.')
 					->addComment('@return \WP_Rest_Response')
 					->setBody('return new \WP_Rest_Response();');
@@ -75,16 +127,12 @@ class Generator {
 					->setType('\WP_Rest_Request');
 
 			// to generate PHP code simply cast to string or use echo:
-			$controller = fopen($this->config->getPath() . ucfirst($endpoint) . '.php', 'w+');
+			$controller = fopen($this->config->getPath() . ucfirst($this->endpoint) . '.php', 'w+');
 			fwrite($controller, "<?php\n\nnamespace " . $this->config->getPsr() . ";\n");
 			fwrite($controller, $class);
 			fclose($controller);
 
 		}
-	}
-
-	public function teste() {
-		return 'Teste';
 	}
 
 	public function getCallbackClass($endpoint, $method) {

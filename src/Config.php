@@ -4,7 +4,7 @@ namespace WPH\Endpoints;
 
 class Config {
 
-	public $path = WP_CONTENT_DIR;
+	public $path = WP_CONTENT_DIR . '/endpoints';
 
 	public $semVer = 'v1';
 
