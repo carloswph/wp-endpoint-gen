@@ -10,6 +10,8 @@ class Config {
 
 	public $psr = 'EndpointGroup';
 
+	public $namespace = 'wph';
+
 	public function getPath() {
 		return $this->path;
 	}
