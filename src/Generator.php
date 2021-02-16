@@ -2,6 +2,7 @@
 
 namespace WPH\Endpoints;
 use Nette\PhpGenerator\ClassType as CT;
+use Nette\Loaders\RobotLoader as AL;
 
 class Generator {
 
@@ -169,6 +170,14 @@ class Generator {
     public function addArgs(string $method, array $args) {
 
 		$this->args[$method] = $args;
+	}
+
+	public function autoload() {
+		
+		$autoload = new AL();
+		$autoload->addDirectory($this->path);
+		$autoload->setTempDirectory(__DIR__ . '/temp');
+		$autoload->register();
 	}
 
     public function array_adjust($a, $b) {

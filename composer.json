@@ -3,7 +3,8 @@
     "description": "Wordpress custom endpoints helper and class generator.",
     "type": "library",
     "require": {
-        "nette/php-generator": "^3.5"
+        "nette/php-generator": "^3.5",
+        "nette/robot-loader": "^3.3"
     },
     "autoload": {
         "psr-4": {

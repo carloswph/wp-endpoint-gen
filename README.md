@@ -35,6 +35,7 @@ require __DIR__ . '/vendor/autoload.php';
 // If you instantiated the Config class and set up new values for the variables, just use the generator including three arguments: the endpoint name, an array of all http methods to be allowed on it and, finally, the object of the Config class:
 $gen = new Generator('wph-endpoint', ['GET', 'PUT'], $config); // That's it. The new endpoints have been created inside your WP API. 
 $gen->generate(); // Now the magic: check the configured path or, if you just used ours, look inside the `wp-content/endpoints` directory.
+$gen->autoload(); // Once callbacks and permission callbacks have been set up as external classes, we need to autoload them.
 ```
 
 All custom endpoints will find the respective callbacks and permission callbacks inside their own classes, located in the path you indicated. It's more than just thinking the WP endpoints in an OOP way - that means you DON'T NEED to write dozens of repetitive functions and callbacks, nor pollute your code with huge anonymous functions or similars.
