@@ -17,5 +17,6 @@
             "name": "Carlos Matos | WP Helpers",
             "email": "carlos@wp-helpers.com"
         }
-    ]
+    ],
+    "minimum-stability": "dev"
 }
