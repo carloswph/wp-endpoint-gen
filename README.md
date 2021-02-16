@@ -54,3 +54,59 @@ $gen->addArgs('PUT', ['id' => ['description' => 'Id of something']]);
 $gen->addArgs('GET', ['name' => ['description' => 'Name of someone']]);
 
 ```
+
+## How generated classes look like?
+So now you are probably asking yourself how those generated controllers we mentioned look like. Of course they are basically skeletons in which you can create your own processes and conditions, but they are already functional from the first moment, returning a simple instance of WP_Rest_Response class. Let's consider an endpoint added under the name 'boxes', and dealing with GET, POST and HEAD calls. In this case, the generated controller class would appear like this:
+
+```php
+
+namespace Foo\Routes;
+/**
+ * Controller class for callbacks and permissions.
+ * Route --> Foo\Routes\Boxes
+ * @since 1.0.0
+ */
+class Boxes
+{
+	/**
+	 * Handles GET requests to the endpoint.
+	 * @return \WP_Rest_Response
+	 */
+	public function getBoxes(\WP_Rest_Request $request)
+	{
+		return new \WP_Rest_Response();
+	}
+
+
+	/**
+	 * Handles POST requests to the endpoint.
+	 * @return \WP_Rest_Response
+	 */
+	public function postBoxes(\WP_Rest_Request $request)
+	{
+		return new \WP_Rest_Response();
+	}
+
+
+	/**
+	 * Handles HEAD requests to the endpoint.
+	 * @return \WP_Rest_Response
+	 */
+	public function headBoxes(\WP_Rest_Request $request)
+	{
+		return new \WP_Rest_Response();
+	}
+
+
+	/**
+	 * Authenticate or limitate requests to the endpoint.
+	 * @return bool
+	 */
+	public function permissions(\WP_Rest_Request $request)
+	{
+		// Your conditions.
+		return true;
+	}
+}
+
+```

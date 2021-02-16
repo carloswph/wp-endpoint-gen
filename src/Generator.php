@@ -31,8 +31,17 @@ class Generator {
 	 * @var  object
 	 */
 	protected $config;
-
+	/**
+	 * Path to generated controller classes. Passed through the Config class instance.
+	 *
+	 * @var  string
+	 */
 	protected $path;
+	/**
+	 * Version of the created endpoints. Passed through the Config class instance.
+	 *
+	 * @var  string
+	 */
 	protected $version;
 	/**
 	 * Arguments to be implemented (optional). Use to apply all arguments to all methods - if looking for arguments applied individually to each method, use the function addArgs()
@@ -136,6 +145,15 @@ class Generator {
 		}
 	}
 
+	/**
+	 * Get the class and callback function based on the endpoint and method.
+	 *
+	 * @since  1.0.0
+	 * @param  string  $endpoint  Name of the endpoint.
+	 * @param  string  $method  HTTP method.
+	 *
+	 * @return  array  $callback
+	 */
 	public function getCallbackClass($endpoint, $method) {
 
 		$classname = ucfirst($endpoint);
@@ -147,6 +165,15 @@ class Generator {
 		return $callback;
 	}
 
+	/**
+	 * Get the class and permission callback function based on the endpoint and method.
+	 *
+	 * @since  1.0.0
+	 * @param  string  $endpoint  Name of the endpoint.
+	 * @param  string  $method  HTTP method.
+	 *
+	 * @return  array  $callback
+	 */
 	public function getPermissionsClass($endpoint) {
 
 		$classname = ucfirst($endpoint);
@@ -172,6 +199,12 @@ class Generator {
 		$this->args[$method] = $args;
 	}
 
+	/**
+	 * Autoloads the generated controller classes.
+	 *
+	 * @since  1.0.0
+	 * @return  void
+	 */
 	public function autoload() {
 		
 		$autoload = new AL();
