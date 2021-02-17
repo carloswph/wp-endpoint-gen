@@ -110,3 +110,4 @@ class Boxes
 }
 
 ```
+All classes are already annotated and bring a callback for each HTTP method created for the respective endpoint, as well as a permissions() function, which return ```true``` by default. Callbacks, as shown, initially return a simple instance of the WP_Rest_Response class.
