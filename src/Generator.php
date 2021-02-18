@@ -48,7 +48,7 @@ class Generator {
 	 *
 	 * @var array
 	 */
-	protected $args = '';
+	protected $args = [];
 
 	/**
 	 * Constructor.
@@ -185,6 +185,14 @@ class Generator {
 		return $callback;
 	}
 
+	/**
+	 * Get the arguments associated to a particular HTTP method im an endpoint.
+	 *
+	 * @since  1.0.0
+	 * @param  string  $method  HTTP method.
+	 *
+	 * @return  '' or array of $args for a method key
+	 */
 	public function getArgs($method) {
     	
     	if($this->args) {
