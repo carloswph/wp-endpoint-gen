@@ -65,7 +65,7 @@ class Generator {
 		$this->endpoint = $endpoint;
 		$this->method = $method;
 		$this->config = $config;
-		$this->namespace = $this->config->getPsr();
+		$this->namespace = $this->config->getNamespace();
 		$this->path = $this->config->getPath();
 		$this->version = $this->config->getVersion();
 
