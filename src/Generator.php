@@ -118,7 +118,7 @@ class Generator {
 				->addComment("Controller class for callbacks and permissions.\nRoute --> " . sprintf($this->config->getPsr() . '\%s', ucfirst($this->endpoint)))
 				->addComment('@since ' . $this->config->getVersion());
 
-			foreach ($method as $function) {
+			foreach ($this->method as $function) {
 				$function = $class->addMethod(strtolower($function) . ucfirst($this->endpoint))
 					->addComment('Handles ' . $function . ' requests to the endpoint.')
 					->addComment('@return \WP_Rest_Response')
