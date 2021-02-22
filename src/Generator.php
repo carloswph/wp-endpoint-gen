@@ -69,6 +69,7 @@ class Generator {
 		$this->path = $this->config->getPath();
 		$this->version = $this->config->getVersion();
 
+		// Currently not operational
 		if(!is_null($args)) {
 			$this->args = $this->array_adjust($method, $args);
 		}
@@ -85,6 +86,7 @@ class Generator {
 	 */
 	public function route() {
 
+		// Iterates to generate the different endpoints for each added HTTP method
 		foreach ($this->method as $httpMethod) {
 			register_rest_route(
 				$this->namespace . '/' . $this->version,
@@ -107,33 +109,38 @@ class Generator {
 	 */
 	public function generate() {
 
+		// Create configured directory if it doesn't exist
 		if (!is_dir($this->path)) {
 			mkdir($this->path, 0755, true);
 		}
 
+		// Check if file already exists before proceeding
 		if(!is_file($this->path . '/' . ucfirst($this->endpoint) . '.php')) {
+
 			$class = new CT(ucfirst($this->endpoint));
 
 			$class
 				->addComment("Controller class for callbacks and permissions.\nRoute --> " . sprintf($this->config->getPsr() . '\%s', ucfirst($this->endpoint)))
 				->addComment('@since ' . $this->config->getVersion());
 
+			// Iterates callback creation for all methods allowed
 			foreach ($this->method as $function) {
 				$function = $class->addMethod(strtolower($function) . ucfirst($this->endpoint))
 					->addComment('Handles ' . $function . ' requests to the endpoint.')
 					->addComment('@return \WP_Rest_Response')
 					->setBody('return new \WP_Rest_Response();');
 
-				$function->addParameter('request') // $items = []          // &$items = []
+				$function->addParameter('request')
 					->setType('\WP_Rest_Request');
 			}
 
+			// Permissions callback is a single function per controller class
 			$permissions = $class->addMethod('permissions')
 					->addComment('Authenticate or limitate requests to the endpoint.')
 					->addComment('@return bool')
 					->setBody("// Your conditions.\nreturn true;");
 
-				$permissions->addParameter('request') // $items = []          // &$items = []
+				$permissions->addParameter('request')
 					->setType('\WP_Rest_Request');
 
 			// to generate PHP code simply cast to string or use echo:
@@ -202,9 +209,22 @@ class Generator {
     	return '';
     }
 
+    /**
+	 * Insert method arguments in the class $args variable.
+	 *
+	 * @since  1.0.4
+	 * @param  string  $method  HTTP method.
+	 * @param  array  $args  Arguments to add with their respective attributes.
+	 *
+	 * @return  void
+	 */
     public function addArgs(string $method, array $args) {
 
-		$this->args[$method] = $args;
+    	if(!$this->args[$method]) {
+			$this->args[$method] = $args;
+		} else {
+			array_push($this->args[$method], $args);
+		}
 	}
 
 	/**
@@ -220,7 +240,15 @@ class Generator {
 		$autoload->setTempDirectory(__DIR__ . '/temp');
 		$autoload->register();
 	}
-
+	/**
+	 * Helpers in combining multidimensional arrays for different methods.
+	 *
+	 * @since  1.0.2
+	 * @param  array  $a  First array
+	 * @param  array  $b  Second array
+	 *
+	 * @return  array_combine()
+	 */
     public function array_adjust($a, $b) {
     	
     	$acount = count($a);
